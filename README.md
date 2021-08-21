@@ -49,9 +49,9 @@
     ```
     terraform init
 
-    terraform apply
+    terraform plan
 
-    terraform plan 
+    terraform apply --out=changes 
 
     terraform destroy
     ```
