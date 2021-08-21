@@ -52,6 +52,8 @@
     terraform plan
 
     terraform apply --out=changes 
+    
+    terraform output
 
     terraform destroy
     ```
