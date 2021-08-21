@@ -8,29 +8,27 @@
 
 1. Download the repository 
   
-    ```git clone https://github.com/shamalkarunanayake/simple-go-app-with-devops.git```
+    ```git clone git@github.com:ifernando/k8s-demo.git```
 
 2. First have a look on go-app-custom-metrics folder to get in touch with simple go-app. It consist of a Dockerfile. and the image also published in dockerhub.
 
-   ```docker pull shamalskk/final-go-app-log1```
-
-   In main.go file there are some implementations to expose prometheus  metrices in go-app. given below are example steps to build and push Docker image using dockerfile
+   Inside the main.go file there are some implementations to expose prometheus metrices in the go-app. shown below is a some simple example with steps to build and push Docker image using a Dockerfile
 
         
-        docker build -t shamalskk/example-app . 
-
+        docker build -t roshaneishara/k8s-demo:1.0.1 .
+        
         docker images
 
-        docker run -d -p 8080:8080 shamalskk/example-app
+        docker run -d -p 8080:8080 roshaneishara/k8s-demo:1.0.1
 
         curl localhost:8080/metrics 
 
         docker login 
 
-        docker push shamalskk/example-app
+        docker push roshaneishara/k8s-demo:1.0.1
         
 
-3. Create a kubernetes cluster in azure using terraform
+3. Provision a kubernetes cluster in Azure (AKS) using terraform
 
     ### Prerequisites
 * Terraform version >= 0.14
