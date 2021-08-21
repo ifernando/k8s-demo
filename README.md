@@ -53,7 +53,6 @@
     
     terraform output
 
-    terraform destroy
     ```
 
 4. Login to azure portal and get the cluster config to local machine
@@ -63,6 +62,8 @@
 
 
     ```
+    az login
+    
     az account set --subscription xxxxxxxx
 
     az aks get-credentials --resource-group xxxxxxxx --name xxxxxxxx
@@ -85,6 +86,12 @@
     kubectl get service
 
     kubectl get pods 
+    
+    kubectl port-forward svc/goapp-svc 8888:30001
+    
+    curl localhost:8888
+    
+    curl http://localhost:8888/metrics
 
     ```
 6. Deploy prometheus operator into our kubernetes cluster using Helm 
@@ -96,10 +103,13 @@
     ```
     helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 
+    helm repo ls 
+    
     helm repo update
 
     helm install prometheus prometheus-community/kube-prometheus-stack
 
+    # Optional step: To install a specific chart version
     helm install prometheus prometheus-community/kube-prometheus-stack --version "9.4.1"
     ```
 
@@ -112,14 +122,29 @@
     kubectl apply -f service-monitor-go-app.yaml
 
     kubectl get servicemonitor
+    
+    cd ../grafana
+    
+    kubectl apply -f goapp-dashboard.json
+    
     ```
 
-    * Now we can port-forward prometheus, grafana instances and see whether the metrics of our simple-go-app and kubernetes cluster 
+    * Now we can port-forward prometheus, grafana instances (admin / prom-operator) and see whether the metrics of our simple-go-app and kubernetes cluster appears on dashboards
 
     ```
     kubectl port-forward prometheus-prometheus-kube-prometheus-prometheus-0 9090
+    
+    curl localhost:9090
+    
+    curl http://localhost:9090/targets#pool-serviceMonitor/default/goapp/0
 
-    kubectl port-forward prometheus-grafana-xxxxx 3000
+    kubectl port-forward svc/prometheus-grafana 8888:80
+    
+    curl localhost:8888
+    
+    # You might need to kill the grafana pod if you want the goapp-dashboard.json to be mounted
+    eg: kubectl.exe delete pod prometheus-grafana-7b8657ddc9-c4ll7
+    
     ```
 
 7. Logging 
@@ -185,3 +210,9 @@
 
    kubectl apply -f vertical-pod-autoscaler.yaml
    ```
+
+9. Finally destroy the cluster
+ ```
+  terraform destroy
+
+ ```
