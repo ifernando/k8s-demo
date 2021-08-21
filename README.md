@@ -125,7 +125,7 @@
     
     cd ../grafana
     
-    kubectl apply -f goapp-dashboard.json
+    kubectl apply -f goapp-dashboard.yaml
     
     ```
 
@@ -145,6 +145,17 @@
     # You might need to kill the grafana pod if you want the goapp-dashboard.json to be mounted
     eg: kubectl.exe delete pod prometheus-grafana-7b8657ddc9-c4ll7
     
+    
+    kubectl.exe  exec -it  prometheus-grafana-xyz – sh
+    
+    df -h
+    
+    cd /tmp/dashboards
+    
+    grep -irl 'goapp' .
+    
+    cat goapp-dashboard.json
+
     ```
 
 7. Logging 
@@ -152,53 +163,37 @@
     * Latest helm charts can be gathered from https://github.com/elastic/helm-charts 
 
     ```
-    helm repo add elastic https://helm.elastic.co 
-    helm repo add fluent https://fluent.github.io/helm-charts
-    helm repo update
-    ```
-    ```
-    # Install elasticsearch
+    export HELM_IFS_MONITORING_VER='1.12.0'
+    export RELEASE_NAME="ifs-monitoring"
 
-    helm install elasticsearch elastic/elasticsearch
-
-    # Install kibana
-
-    helm install kibana elastic/kibana
-
-    # Install fluentd
-
-    helm install fluentd fluent/fluentd
-    helm show values fluent/fluentd
-
-    or else 
-
-    cd elastic-fluentd-kibana
-    kubectl apply -f fluentd.yaml
-
-    # Install metric-beat
-
-    helm install metricbeat elastic/metricbeat
-
-    # Install file-beat
-    helm install filebeat elastic/filebeat
-
-    # Install logstash
-    helm install logstash elastic/logstash
+   helm upgrade --install $RELEASE_NAME logging --version "$HELM_IFS_MONITORING_VER" --set global.fluentd.enabled=true --set global.elasticsearch.enabled=true --set global.kibana.enabled=true --set fluentd.aggregator.extraEnv[0].name=ELASTICSEARCH_HOST,fluentd.aggregator.extraEnv[0].value=elasticsearch-master --set-string fluentd.aggregator.extraEnv[1].name=ELASTICSEARCH_PORT,fluentd.aggregator.extraEnv[1].value=9200 --set fluentd.aggregator.extraEnv[2].name=ELASTICSEARCH_PATH,fluentd.aggregator.extraEnv[2].value=/ --set fluentd.aggregator.extraEnv[3].name=ELASTICSEARCH_SCHEME,fluentd.aggregator.extraEnv[3].value=http --set kibana.elasticsearchHosts=http://elasticsearch-master:9200  --set kibana.ingress.hosts[0]=ucsc-demo.ifs.com  --set elasticsearch.ingress.hosts[0]=ucsc-demo.ifs.com -n default -f ./logging/values.yaml
     ```
 
     * Go inside elastic-fluentd-kibana folder apply the counter.yaml to generate simple counter logs
     ```
     kubectl apply -f counter.yaml
     ```
+    
+     * Accessing Elasticsearch
+
+    ```
+    kubectl.exe  port-forward svc/elasticsearch-master 9200:9200
+    
+    curl http://localhost:9200/_cat/
+    
+    http://localhost:9200/_cat/indices
+    
+    http://localhost:9200/_cat/health
+
+    ```
+    
     * After following below steps, you can access kibana 
 
     ```
-    kubectl port-forward --namespace default  elasticsearch-master-0  9200:9200
-
-    kubectl port-forward kibana-kibana-b4dfc69c7-rtx9g 5601
-
-    kubectl --namespace default port-forward fluentd-XXXX 24231:24231
-    curl http://127.0.0.1:24231/metrics
+    kubectl.exe  port-forward svc/kibana 5601:5601
+    
+    curl http://localhost:5601/kibana
+   
     ```
 
 8. Deploy java big-memory-app to test auto-scaling 
@@ -208,7 +203,6 @@
    ```
    kubectl apply -f java-bigmemoryapp.yaml
 
-   kubectl apply -f vertical-pod-autoscaler.yaml
    ```
 
 9. Finally destroy the cluster
