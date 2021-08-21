@@ -1,2 +1,8 @@
 # Auto detect text files and perform LF normalization
-* text=auto
+*.json text eol=lf
+*.bats text eol=lf
+*.sh text eol=lf
+*.yaml text eof=lf
+*.yml text eof=lf
+*.tf text eof=lf
+*.md text eof=lf
