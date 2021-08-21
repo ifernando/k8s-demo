@@ -201,7 +201,30 @@
    * Go inside kubernetes folder and deploy java-bigmemoryapp.yaml
 
    ```
+   kubectl get nodes | wc -l
+
    kubectl apply -f java-bigmemoryapp.yaml
+
+   kubectl describe pod <pod-id>
+   
+   kubectl get nodes | wc -l
+   ```
+
+   * If you see the following error then bump the aks-cluster.tf and run terraform apply
+   ```
+
+     Normal NotTriggerScaleUp  54s cluster-autoscaler  pod didn't trigger scale-up: 1 max node group size reached
+
+     vi aks-cluster.tf
+
+     max_count = 7
+
+     az login
+     
+     terraform plan
+     
+     terraform apply
+
 
    ```
 

@@ -19,7 +19,7 @@ spec:
           image: banzaicloud/dynclassgen:1.0
           env:
           - name: DYN_CLASS_COUNT
-            value: "1000"
+            value: "450"
           - name: MEM_USAGE_PER_OBJECT_MB
             value: "1"
           resources:

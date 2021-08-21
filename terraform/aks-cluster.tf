@@ -42,7 +42,7 @@ resource "azurerm_kubernetes_cluster" "demo" {
     availability_zones  = ["1", "2"]
     enable_auto_scaling = true
     min_count           = 2
-    max_count           = 6
+    max_count           = 7
 
     vnet_subnet_id = azurerm_subnet.demo.id
   }
