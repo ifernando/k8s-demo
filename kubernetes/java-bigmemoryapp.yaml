@@ -5,7 +5,7 @@ metadata:
   labels:
     app: dyn-class-gen
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: dyn-class-gen
@@ -19,13 +19,13 @@ spec:
           image: banzaicloud/dynclassgen:1.0
           env:
           - name: DYN_CLASS_COUNT
-            value: "256"
+            value: "1000"
           - name: MEM_USAGE_PER_OBJECT_MB
             value: "1"
           resources:
             requests:
-              memory: "64Mi"
-              cpu: 1
+              memory: "2Gi"
+              cpu: 0.5
             limits:
-              memory: "1Gi"
-              cpu: 2
+              memory: "2Gi"
+              cpu: 0.5
