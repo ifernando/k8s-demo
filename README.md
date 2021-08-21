@@ -53,7 +53,6 @@
     
     terraform output
 
-    terraform destroy
     ```
 
 4. Login to azure portal and get the cluster config to local machine
@@ -63,6 +62,8 @@
 
 
     ```
+    az login
+    
     az account set --subscription xxxxxxxx
 
     az aks get-credentials --resource-group xxxxxxxx --name xxxxxxxx
@@ -85,6 +86,12 @@
     kubectl get service
 
     kubectl get pods 
+    
+    kubectl port-forward svc/goapp-svc 8888:30001
+    
+    curl localhost:8888
+    
+    curl http://localhost:8888/metrics
 
     ```
 6. Deploy prometheus operator into our kubernetes cluster using Helm 
@@ -96,6 +103,8 @@
     ```
     helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 
+    helm repo ls 
+    
     helm repo update
 
     helm install prometheus prometheus-community/kube-prometheus-stack
@@ -185,3 +194,9 @@
 
    kubectl apply -f vertical-pod-autoscaler.yaml
    ```
+
+9. Finally destroy the cluster
+ ```
+  terraform destroy
+
+ ```
