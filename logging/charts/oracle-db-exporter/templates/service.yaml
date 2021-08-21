@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "oracle-db-exporter.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "oracle-db-exporter.labels" . | nindent 4 }}
+spec:
+  ports:
+  - name: oracle-db-exporter
+    port: {{ .Values.service.port }}
+    protocol: TCP
+    targetPort: 9161
+  selector:
+    {{- include "oracle-db-exporter.selectorLabels" . | nindent 4 }}
+  type: {{ .Values.service.type }}

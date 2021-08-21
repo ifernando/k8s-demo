@@ -1,0 +1,567 @@
+---
+
+global:
+  kube-prometheus-stack:
+    enabled: false
+  oracle-db-exporter:
+    enabled: false
+  fluentd:
+    enabled: false
+  elasticsearch:
+    enabled: false
+  kibana:
+    enabled: false
+  elasticsearch-curator:
+    enabled: false
+
+kube-prometheus-stack:
+  commonLabels:
+    prometheus: "ifs-monitoring"
+
+  prometheusOperator:
+    cleanupCustomResourceBeforeInstall: true
+    cleanupCustomResource: true
+
+  alertmanager:
+    enabled: false
+    alertmanagerSpec:
+      replicas: 2
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: default
+            resources:
+              requests:
+                storage: 1Gi
+      resources:
+        limits:
+          cpu: 500m
+          memory: 768Mi
+        requests:
+          cpu: 200m
+          memory: 256Mi
+      podAntiAffinity: "soft"
+    config:
+      route:
+        receiver: "ServiceNow"
+        repeat_interval: 20m
+        group_by: ['alertname','pod','namespace','cluster']
+        routes:
+        - receiver: "ServiceNow"
+          repeat_interval: 5m
+          match:
+            alertname: Watchdog
+      receivers:
+      - name: "ServiceNow"
+        webhook_configs:
+        - url: 'ALERTMNGR_SNOW_WEBHOOK_URL'
+          send_resolved: true
+          http_config:
+            basic_auth:
+              username: "prometheus"
+              password: "ALERTMNGR_SNOW_PWD"
+
+  defaultRules:
+    create: false
+  kubeControllerManager:
+    enabled: false
+  kubeScheduler:
+    enabled: false
+  kubeEtcd:
+    enabled: false
+  kubeProxy:
+    enabled: false
+  kube-state-metrics:
+    prometheusScrape: false
+
+  prometheus:
+    podDisruptionBudget:
+      enabled: false
+    prometheusSpec:
+      replicas: 1
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 4Gi
+        requests:
+          cpu: 500m
+          memory: 512Mi
+      podAntiAffinity: ""
+      scrapeInterval: 120s
+      scrapeTimeout: 30s
+      evaluationInterval: 120s
+      routePrefix: /prometheus
+      externalLabels:
+        cluster: FQDN_FOR_MONITORING_INGRESS   # set prometheus cluster name
+        customercode: CUST_CODE
+        environmenttype: ENV_TYPE
+        region: REGION
+        source: k8s
+      replicaExternalLabelNameClear: true
+      replicaExternalLabelName: "__replica__"
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: default
+            resources:
+              requests:
+                storage: 8Gi
+      retentionSize: 7GB
+      retention: 10d
+      remoteWrite:
+        - url: PROMETHEUS_REMOTE_WRITE_STORAGE
+          name: CUST_CODE-REGION-ENV_TYPE
+          queueConfig:
+            capacity: "500"
+            maxSamplesPerSend: "100"
+            maxShards: "300"
+      remoteWriteDashboards: true
+
+      additionalScrapeConfigs:
+        - job_name: 'kubernetes-service-endpoints'
+          kubernetes_sd_configs:
+            - role: endpoints
+          relabel_configs:
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+              action: keep
+              regex: true
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+              action: replace
+              target_label: __scheme__
+              regex: (https?)
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+              action: replace
+              target_label: __metrics_path__
+              regex: (.+)
+            - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+              action: replace
+              target_label: __address__
+              regex: ([^:]+)(?::\d+)?;(\d+)
+              replacement: $1:$2
+            - action: labelmap
+              regex: __meta_kubernetes_service_label_(.+)
+            - source_labels: [__meta_kubernetes_namespace]
+              action: replace
+              target_label: kubernetes_namespace
+            - source_labels: [__meta_kubernetes_service_name]
+              action: replace
+              target_label: kubernetes_name
+            - source_labels: [__meta_kubernetes_service_name]
+              action: drop
+              regex: 'node-exporter'
+            - source_labels:
+              - __meta_kubernetes_pod_container_name
+              action: drop
+              regex: ^linkerd-proxy$
+
+        - job_name: 'kubernetes-service-endpoints-slow'
+          scrape_interval: 5m
+          scrape_timeout: 30s
+          kubernetes_sd_configs:
+            - role: endpoints
+          relabel_configs:
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape_slow]
+              action: keep
+              regex: true
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+              action: replace
+              target_label: __scheme__
+              regex: (https?)
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+              action: replace
+              target_label: __metrics_path__
+              regex: (.+)
+            - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+              action: replace
+              target_label: __address__
+              regex: ([^:]+)(?::\d+)?;(\d+)
+              replacement: $1:$2
+            - action: labelmap
+              regex: __meta_kubernetes_service_label_(.+)
+            - source_labels: [__meta_kubernetes_namespace]
+              action: replace
+              target_label: kubernetes_namespace
+            - source_labels: [__meta_kubernetes_service_name]
+              action: replace
+              target_label: kubernetes_name
+            - source_labels: [__meta_kubernetes_pod_node_name]
+              action: replace
+              target_label: kubernetes_node
+            - source_labels: [__meta_kubernetes_service_name]
+              action: drop
+              regex: 'node-exporter'
+            - source_labels:
+              - __meta_kubernetes_pod_container_name
+              action: drop
+              regex: ^linkerd-proxy$
+
+        - job_name: 'kubernetes-services'
+          metrics_path: /probe
+          params:
+            module: [http_2xx]
+          kubernetes_sd_configs:
+            - role: service
+          relabel_configs:
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_probe]
+              action: keep
+              regex: true
+            - source_labels: [__address__]
+              target_label: __param_target
+            - target_label: __address__
+              replacement: blackbox
+            - source_labels: [__param_target]
+              target_label: instance
+            - action: labelmap
+              regex: __meta_kubernetes_service_label_(.+)
+            - source_labels: [__meta_kubernetes_namespace]
+              target_label: kubernetes_namespace
+            - source_labels: [__meta_kubernetes_service_name]
+              target_label: kubernetes_name
+
+        - job_name: 'kubernetes-pods'
+          kubernetes_sd_configs:
+            - role: pod
+          relabel_configs:
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+              action: keep
+              regex: true
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]
+              action: replace
+              regex: (https?)
+              target_label: __scheme__
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+              action: replace
+              target_label: __metrics_path__
+              regex: (.+)
+            - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+              action: replace
+              regex: ([^:]+)(?::\d+)?;(\d+)
+              replacement: $1:$2
+              target_label: __address__
+            - action: labelmap
+              regex: __meta_kubernetes_pod_label_(.+)
+            - source_labels: [__meta_kubernetes_namespace]
+              action: replace
+              target_label: kubernetes_namespace
+            - source_labels: [__meta_kubernetes_pod_name]
+              action: replace
+              target_label: kubernetes_pod_name
+            - source_labels: [__meta_kubernetes_pod_phase]
+              regex: Pending|Succeeded|Failed
+              action: drop
+            - source_labels: [__meta_kubernetes_pod_name]
+              separator: ;
+              regex: ^oracle-db-exporter(.*)
+              replacement: $1
+              action: drop
+
+        - job_name: 'kubernetes-pods-slow'
+          scrape_interval: 5m
+          scrape_timeout: 30s
+          kubernetes_sd_configs:
+            - role: pod
+          relabel_configs:
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape_slow]
+              action: keep
+              regex: true
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]
+              action: replace
+              regex: (https?)
+              target_label: __scheme__
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+              action: replace
+              target_label: __metrics_path__
+              regex: (.+)
+            - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+              action: replace
+              regex: ([^:]+)(?::\d+)?;(\d+)
+              replacement: $1:$2
+              target_label: __address__
+            - action: labelmap
+              regex: __meta_kubernetes_pod_label_(.+)
+            - source_labels: [__meta_kubernetes_namespace]
+              action: replace
+              target_label: kubernetes_namespace
+            - source_labels: [__meta_kubernetes_pod_name]
+              action: replace
+              target_label: kubernetes_pod_name
+            - source_labels: [__meta_kubernetes_pod_phase]
+              regex: Pending|Succeeded|Failed
+              action: drop
+            - source_labels: [__meta_kubernetes_pod_name]
+              separator: ;
+              regex: ^oracle-db-exporter(.*)
+              replacement: $1
+              action: drop
+
+        - job_name: 'elasticsearch-exporter'
+          metrics_path: /metrics
+          static_configs:
+          - targets: ['elastic-exporter-prometheus-elasticsearch-exporter.ifs-monitoring.svc.cluster.local:9108']
+
+        - job_name: 'nginx-ingress-exporter'
+          metrics_path: /metrics
+          static_configs:
+          - targets: ['ingress-nginx-ingress-controller-metrics.ifs-ingress.svc.cluster.local:9913']
+
+      serviceMonitorSelectorNilUsesHelmValues: false
+      podMonitorSelectorNilUsesHelmValues: false
+      probeSelectorNilUsesHelmValues: false
+      serviceMonitorSelector:
+        matchLabels:
+          prometheus: "ifs-monitoring"
+      podMonitorSelector:
+        matchLabels:
+          prometheus: "ifs-monitoring"
+      probeSelector:
+        matchLabels:
+          prometheus: "ifs-monitoring"
+      additionalAlertManagerConfigs:
+        - static_configs:
+          - targets:
+            - 'ALERTMNGR_TARGET_0'
+            - 'ALERTMNGR_TARGET_1'
+            - 'ALERTMNGR_TARGET_2'
+
+  prometheus-node-exporter:
+    service:
+      annotations:
+        ""
+    resources:
+      limits:
+        cpu: 200m
+        memory: 50Mi
+      requests:
+        cpu: 50m
+        memory: 30Mi
+
+  grafana:
+    enabled: false
+    replicas: 1
+    resources:
+      limits:
+        cpu: 400m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    serviceMonitor:
+      enabled: true
+      interval: 2m
+    plugins:
+      - grafana-polystat-panel
+      - grafana-simple-json-datasource
+    service:
+      port: 8080
+    grafana.ini:
+      server:
+        domain: FQDN_FOR_MONITORING_INGRESS
+        root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
+        serve_from_sub_path: true
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+        - name: 'ifs'
+          orgId: 1
+          folder: ''
+          type: file
+          updateIntervalSeconds: 120
+          disableDeletion: true
+          editable: true
+          allowUiUpdates: true
+          options:
+            path: /var/lib/grafana/dashboards/ifs
+    dashboards:
+      ifs:
+        ifs-cloud-dashboard:
+          file: dashboards/ifs-cloud-dashboard.json
+        ifs-applications-dashboard:
+          file: dashboards/ifs-applications-dashboard.json
+        ifs-oracledb-dashboard:
+          file: dashboards/ifs-oracledb-dashboard.json
+        nginx-ingress-controller:
+          file: dashboards/nginx-ingress-controller.json
+    persistence:
+      enabled: false
+      size: 2Gi
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        nginx.ingress.kubernetes.io/rewrite-target: /$1
+      path: /grafana/?(.*)
+      hosts:
+        - FQDN_FOR_MONITORING_INGRESS
+      tls:
+        - secretName: "ifs-infra-mon-secret-tls"
+          hosts:
+            - FQDN_FOR_MONITORING_INGRESS
+
+oracle-db-exporter:
+  dataSource: DATA_SOURCE_NAME
+  customerCode: CUST_CODE
+  environmentType: ENV_TYPE
+  region: REGION
+
+fluentd:
+  fullnameOverride: "fluentd"
+  aggregator:
+    serviceAccount:
+      name: fluentd-forwarder
+    resources:
+      limits:
+        cpu: 500m
+        memory: 1Gi
+      requests:
+        cpu: 300m
+        memory: 512Mi
+    extraEnv:
+    - name: ELASTICSEARCH_HOST
+      value: ES_HOST
+    - name: ELASTICSEARCH_PORT
+      value: ES_PORT
+    - name: ELASTICSEARCH_PATH
+      value: ES_PATH
+    - name: ELASTICSEARCH_SCHEME
+      value: ES_SCHEME
+    - name: CLUSTER_NAME
+      value: CLUSTER_NAME
+    - name: ELASTICSEARCH_USERNAME
+      value: ES_USERNAME
+    - name: ELASTICSEARCH_PASSWORD
+      value: ES_PASSWD
+    configMap: aggregator
+
+  forwarder:
+    configMap: fowarder
+    resources:
+      limits:
+        cpu: 500m
+        memory: 1Gi
+      requests:
+        cpu: 300m
+        memory: 512Mi
+
+elasticsearch:
+  clusterName: "elasticsearch"
+  nodeGroup: "master"
+  replicas: 2
+  image: "docker.elastic.co/elasticsearch/elasticsearch"
+  imageTag: "7.8.0"
+  imagePullPolicy: "IfNotPresent"
+  resources:
+    requests:
+      cpu: "1000m"
+      memory: "2Gi"
+    limits:
+      cpu: "1000m"
+      memory: "2Gi"
+  protocol: http
+  httpPort: 9200
+  transportPort: 9300
+  roles:
+    master: "true"
+    ingest: "true"
+    data: "true"
+    remote_cluster_client: "true"
+  service:
+    labels: {}
+    labelsHeadless: {}
+    type: ClusterIP
+    nodePort: ""
+    annotations: {}
+    httpPortName: http
+    transportPortName: transport
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    externalTrafficPolicy: ""
+
+  volumeClaimTemplate:
+    accessModes: [ "ReadWriteOnce" ]
+    resources:
+      requests:
+        storage: 15Gi
+  ingress:
+    enabled: true
+    annotations:
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+    path: /elasticsearch(/|$)(.*)
+    hosts:
+      - FQDN_FOR_MONITORING_INGRESS
+
+kibana:
+  fullnameOverride: "kibana"
+  elasticsearchHosts: "http://ES_HOST:ES_PORT"
+  replicas: 1
+  image: "docker.elastic.co/kibana/kibana"
+  imageTag: "7.8.0"
+  imagePullPolicy: "IfNotPresent"
+  resources:
+    requests:
+      cpu: "1000m"
+      memory: "2Gi"
+    limits:
+      cpu: "1000m"
+      memory: "2Gi"
+  protocol: http
+  httpPort: 5601
+  service:
+    type: ClusterIP
+    loadBalancerIP: ""
+    port: 5601
+    nodePort: ""
+    labels: {}
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+    path: /kibana
+    hosts:
+      - FQDN_FOR_MONITORING_INGRESS
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    successThreshold: 3
+    timeoutSeconds: 5
+  kibanaConfig:
+    kibana.yml: |
+      server.basePath: "/kibana"
+      server.rewriteBasePath: true
+  healthCheckPath: /kibana/app/kibana
+
+
+elasticsearch-curator:
+  cronjob:
+    schedule: "00 00 * * *"
+
+  configMaps:
+
+    action_file_yml: |-
+      ---
+      actions:
+        1:
+          action: delete_indices
+          description: "Clean up ES by deleting old indices"
+          options:
+            timeout_override:
+            continue_if_exception: False
+            disable_action: False
+            ignore_empty_list: True
+          filters:
+          - filtertype: age
+            source: name
+            direction: older
+            timestring: '%Y.%m.%d'
+            unit: days
+            unit_count: 7
+
+
+    config_yml: |-
+      ---
+      client:
+        hosts:
+          - elasticsearch-master
+        port: 9200

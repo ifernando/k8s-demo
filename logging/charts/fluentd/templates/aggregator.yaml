@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aggregator
+data:
+  fluentd.conf: |
+
+    # Ignore fluentd own events
+    <match fluent.**>
+      @type null
+    </match>
+
+    # TCP input to receive logs from the forwarders
+    <source>
+      @type forward
+      bind 0.0.0.0
+      port 24224
+    </source>
+
+    # HTTP input for the liveness and readiness probes
+    <source>
+      @type http
+      bind 0.0.0.0
+      port 9880
+    </source>
+    
+    # Throw the healthcheck to the standard output instead of forwarding it
+    <match fluentd.healthcheck>
+      @type stdout
+    </match>
+
+    # filter to add a cluster name field to the logs
+    <filter **>
+      @type record_transformer
+      <record>
+        kubernetes.cluster_name "#{ENV['CLUSTER_NAME']}"
+      </record>
+    </filter>
+
+    # Send the logs to the standard output
+    <match **>
+      @type elasticsearch
+      include_tag_key true
+      host "#{ENV['ELASTICSEARCH_HOST']}"
+      port "#{ENV['ELASTICSEARCH_PORT']}"
+      path "#{ENV['ELASTICSEARCH_PATH']}"
+      user "#{ENV['ELASTICSEARCH_USERNAME']}"
+      password "#{ENV['ELASTICSEARCH_PASSWORD']}"
+      scheme "#{ENV['ELASTICSEARCH_SCHEME']}"
+      ssl_verify false
+      ssl_version TLSv1_2
+      logstash_format true
+      reconnect_on_error true
+      reload_on_failure true
+      reload_connections false
+      suppress_type_name true
+      <buffer>
+        @type file
+        path /opt/bitnami/fluentd/logs/buffers/logs.buffer
+        buffer_chunk_limit 1M
+        buffer_queue_limit 10240
+        chunk_limit_size 10M
+        total_limit_size 20G
+        flush_interval 10s
+        max_retry_wait 20
+        num_threads 8
+        retry_timeout 30s
+        retry_max_interval 30
+        request_timeout 30s
+      </buffer>
+    </match>

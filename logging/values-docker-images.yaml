@@ -1,0 +1,117 @@
+kube-prometheus-stack:
+  global:
+    imagePullSecrets:
+      - name: dockerartifact
+
+  prometheusOperator:
+    admissionWebhooks:
+      patch:
+        image: 
+          repository: ifscloud.jfrog.io/docker/jettech/kube-webhook-certgen
+          tag: v1.5.0
+
+    image:
+      repository: ifscloud.jfrog.io/docker/prometheus-operator/prometheus-operator
+      tag: v0.47.0
+
+    prometheusConfigReloaderImage:
+      repository: ifscloud.jfrog.io/docker/prometheus-operator/prometheus-config-reloader
+      tag: v0.47.0
+    
+    prometheusSpec:
+      image:
+        repository: ifscloud.jfrog.io/docker/prometheus/prometheus
+        tag: v2.26.0
+
+  alertmanager:
+    alertmanagerSpec:
+      image:
+        repository: ifscloud.jfrog.io/docker/prometheus/alertmanager
+        tag: v0.21.0
+
+  prometheus-node-exporter:
+    image:
+      repository: ifscloud.jfrog.io/docker/prometheus/node-exporter
+      tag: v1.1.2
+
+    serviceAccount:
+      imagePullSecrets:
+        - name: dockerartifact
+
+  kube-state-metrics:
+    image:
+      repository: ifscloud.jfrog.io/docker/kube-state-metrics/kube-state-metrics
+      tag: v1.9.8
+
+    imagePullSecrets:
+      - name: dockerartifact
+
+  prometheus:
+    prometheusSpec:
+      image:
+        repository: ifscloud.jfrog.io/docker/prometheus/prometheus
+        tag: v2.26.0
+    
+  grafana:
+    image:
+      repository: ifscloud.jfrog.io/docker/grafana/grafana
+      tag: 7.5.3
+  
+      pullSecrets:
+        - dockerartifact
+
+    testFramework:
+      image: "bats/bats"
+      tag: "v1.1.0"
+
+    downloadDashboardsImage:
+      repository: ifscloud.jfrog.io/docker/curlimages/curl
+      tag: 7.73.0
+
+    initChownData:
+      image:
+        repository: ifscloud.jfrog.io/docker/busybox
+        tag: "1.31.1"
+    
+    sidecar:
+      image:
+        repository: ifscloud.jfrog.io/docker/kiwigrid/k8s-sidecar
+        tag: 1.10.7
+
+    imageRenderer:
+      image:
+        repository: ifscloud.jfrog.io/docker/grafana/grafana-image-renderer
+        tag: latest
+
+        
+oracle-db-exporter:
+  image:
+    repository: ifscloud.jfrog.io/docker/iamseth/oracledb_exporter
+    tag: ""
+
+  imagePullSecrets:
+    - name: dockerartifact
+
+fluentd:
+  image:
+    registry: ifscloud.jfrog.io
+    repository: docker/bitnami/fluentd
+    tag: 1.11.4-debian-10-r0
+
+    pullSecrets:
+      - dockerartifact
+
+elasticsearch:
+  image: ifscloud.jfrog.io/docker/elasticsearch/elasticsearch
+  imageTag: "7.9.2"
+
+  imagePullSecrets:
+    - name: dockerartifact
+
+kibana:
+  image: ifscloud.jfrog.io/docker/kibana/kibana
+  imageTag: "7.9.2"
+
+  imagePullSecrets:
+    - name: dockerartifact
+

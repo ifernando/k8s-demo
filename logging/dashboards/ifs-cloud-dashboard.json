@@ -1,0 +1,1231 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 6,
+  "iteration": 1610288282812,
+  "links": [],
+  "panels": [
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "width": 200
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "jarversion"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 334
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 39,
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "ifsversion"
+          }
+        ]
+      },
+      "pluginVersion": "7.1.1",
+      "targets": [
+        {
+          "expr": "ifsamm_exporter_build_info{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": true,
+              "__name__": true,
+              "app": true,
+              "buildjava": true,
+              "customercode": true,
+              "do_auth": true,
+              "env_subnet": true,
+              "environmenttype": true,
+              "instance": true,
+              "internetaccess": true,
+              "jarbuild_time": true,
+              "jarversion": true,
+              "job": true,
+              "kubernetes_namespace": true,
+              "kubernetes_pod_name": true,
+              "linkerd_io_control_plane_ns": true,
+              "linkerd_io_proxy_deployment": true,
+              "linkerd_io_workload_ns": true,
+              "pod_template_hash": true,
+              "runtimejava": true,
+              "tier": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "Value": 23,
+              "__name__": 1,
+              "app": 2,
+              "buildjava": 3,
+              "customercode": 4,
+              "do_auth": 5,
+              "env_subnet": 6,
+              "environmenttype": 7,
+              "ifsversion": 8,
+              "instance": 10,
+              "internetaccess": 11,
+              "jarbuild_time": 12,
+              "jarversion": 13,
+              "job": 14,
+              "kubernetes_namespace": 15,
+              "kubernetes_pod_name": 16,
+              "linkerd_io_control_plane_ns": 17,
+              "linkerd_io_proxy_deployment": 18,
+              "linkerd_io_workload_ns": 19,
+              "pod_template_hash": 20,
+              "runtimejava": 21,
+              "tier": 22,
+              "version": 9
+            },
+            "renameByName": {
+              "ifsversion": "Release",
+              "version": "AMM version"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "max": 365,
+          "min": 0,
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d44a3a",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 15
+              },
+              {
+                "color": "#299c46",
+                "value": 30
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 2
+      },
+      "id": 37,
+      "links": [],
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "7.1.1",
+      "targets": [
+        {
+          "expr": "ifsamm_http_cert{ifsrole=\"app\",customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "format": "heatmap",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Days",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Cert expire on system url",
+      "type": "bargauge"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 2
+      },
+      "id": 20,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.1",
+      "targets": [
+        {
+          "expr": "ifsamm_db_fnd_users{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "interval": "",
+          "legendFormat": "Total fnd users (activated)",
+          "refId": "A"
+        },
+        {
+          "expr": "ifsamm_db_logged_on_users{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "logged on fnd users",
+          "refId": "B"
+        },
+        {
+          "expr": "ifsamm_db_roles_per_user{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "Avg Roles per user ",
+          "refId": "C"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Foundation Users",
+      "type": "stat"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 2
+      },
+      "hiddenSeries": false,
+      "id": 8,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "7.1.1",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "ifsamm_db_queue_ready{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "BG jobs Ready",
+          "refId": "A"
+        },
+        {
+          "expr": "ifsamm_db_queue_wait{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "BG jobs Posted",
+          "refId": "B"
+        },
+        {
+          "expr": "ifsamm_db_queue_exec{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "BG jobs Executing",
+          "refId": "C"
+        },
+        {
+          "expr": "ifsamm_db_queue_error{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "BG jobs Errors",
+          "refId": "D"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Background jobs",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 2,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 6
+      },
+      "id": 30,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.1",
+      "targets": [
+        {
+          "expr": "ifsamm_db_dictionary_refresh{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "interval": "",
+          "legendFormat": "Dictionary",
+          "refId": "A"
+        },
+        {
+          "expr": "ifsamm_db_reference_refresh{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "interval": "",
+          "legendFormat": "Reference",
+          "refId": "B"
+        },
+        {
+          "expr": "ifsamm_db_report_refresh{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "interval": "",
+          "legendFormat": "Report",
+          "refId": "C"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Objects not in Caches",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "description": "Should never be less than 2\nlight and heavy cleanup jobs must be active",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 6,
+        "y": 6
+      },
+      "id": 22,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.1",
+      "targets": [
+        {
+          "expr": "ifsamm_db_cleanup_total{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "Cleanup jobs ",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Cleanup jobs",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "description": "BG jobs running more than 12h",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 2
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 9
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.1",
+      "targets": [
+        {
+          "expr": "ifsamm_db_deferred_jobs_executing_12h{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "Jobs running > 12h",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Long running BG jobs",
+      "type": "stat"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "hiddenSeries": false,
+      "id": 10,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "7.1.1",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "ifsamm_db_server_proc_total{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "batch jobs total",
+          "refId": "A"
+        },
+        {
+          "expr": "ifsamm_db_server_proc_broken{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "batch jobs broken",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Batch jobs",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 13
+      },
+      "hiddenSeries": false,
+      "id": 12,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "7.1.1",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "ifsamm_db_connectivity_db_processes{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "Queue processes that handle connectivity ",
+          "refId": "A"
+        },
+        {
+          "expr": "ifsamm_db_connectivity_inbox_routing{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "Stuck inbox > 30m",
+          "refId": "B"
+        },
+        {
+          "expr": "ifsamm_db_connectivity_outbox_routing{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "Stuck outbox> 30m",
+          "refId": "C"
+        },
+        {
+          "expr": "ifsamm_db_connectivity_processes{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "Throughtput last 30m",
+          "refId": "D"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Connectivity",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 18
+      },
+      "hiddenSeries": false,
+      "id": 2,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "7.1.1",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "ifsamm_db_appl_messages_processing_2h{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "Processing > 2h",
+          "refId": "A"
+        },
+        {
+          "expr": "ifsamm_db_appl_messages_released_2h{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "Released > 2h",
+          "refId": "B"
+        },
+        {
+          "expr": "ifsamm_db_appl_messages_with_retries{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "Retrying",
+          "refId": "C"
+        },
+        {
+          "expr": "ifsamm_db_appl_server_bq_with_error{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "Errors",
+          "refId": "D"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Batch Message Queues",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 27
+      },
+      "hiddenSeries": false,
+      "id": 4,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "7.1.1",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "ifsamm_db_batch_queue_active{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "active queues",
+          "refId": "B"
+        },
+        {
+          "expr": "ifsamm_db_batch_queue_config{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "defined queues",
+          "refId": "A"
+        },
+        {
+          "expr": "ifsamm_db_batch_queue_proc{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "sum of queue processes",
+          "refId": "C"
+        },
+        {
+          "expr": "ifsamm_db_queue_processes{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "job_queue_prcesses",
+          "refId": "D"
+        },
+        {
+          "expr": "ifsamm_db_stuck_batch_queue_processes{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "stuck jobs",
+          "refId": "E"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Background Queues",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 6,
+        "x": 12,
+        "y": 35
+      },
+      "id": 14,
+      "options": {
+        "displayMode": "basic",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "7.1.1",
+      "targets": [
+        {
+          "expr": "ifsamm_db_printjob_failed_24h{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "failed last 24h",
+          "refId": "B"
+        },
+        {
+          "expr": "ifsamm_db_printjob_waiting_15m{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "waiting > 15m",
+          "refId": "E"
+        },
+        {
+          "expr": "ifsamm_db_printjob_failed_24h{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "failed last 24h",
+          "refId": "F"
+        },
+        {
+          "expr": "ifsamm_db_printjob_working_2h{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "working > 2h",
+          "refId": "G"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Print queue",
+      "type": "bargauge"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 35
+      },
+      "id": 16,
+      "links": [],
+      "options": {
+        "displayMode": "basic",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "7.1.1",
+      "targets": [
+        {
+          "expr": "ifsamm_db_printagents_remote_active{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "interval": "",
+          "legendFormat": "active print agents",
+          "refId": "A"
+        },
+        {
+          "expr": "ifsamm_db_printjob_remotewaiting_15min{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "waiting >15m",
+          "refId": "B"
+        },
+        {
+          "expr": "ifsamm_db_printjob_remotewaiting_30min{customercode=~\"$customercode\",environmenttype=~\"$environmenttype\"}",
+          "legendFormat": "waiting >30min",
+          "refId": "C"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Print agents",
+      "type": "bargauge"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 26,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "Prometheus",
+        "definition": "label_values(customercode)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Customer",
+        "multi": true,
+        "name": "customercode",
+        "options": [],
+        "query": "label_values(customercode)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "Prometheus",
+        "definition": "label_values(environmenttype)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Environment",
+        "multi": true,
+        "name": "environmenttype",
+        "options": [],
+        "query": "label_values(environmenttype)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "IFS Cloud",
+  "uid": "6o2d_IAGz",
+  "version": 24
+}

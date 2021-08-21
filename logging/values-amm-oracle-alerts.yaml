@@ -1,0 +1,372 @@
+kube-prometheus-stack:
+  additionalPrometheusRulesMap:
+    # AMM Oracle Metrics
+    amm-oracle:
+      groups:
+      - name: oracledb_block_corruption
+        rules:
+        - alert: oracledb_block_corruptionCritical
+          expr: oracledb_BLOCK_CORRUPTION_log > 0
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_block_corruption count is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_block_corruption count is critical'
+            message: '{{$labels.instance}}_oracledb_block_corruptionCritical'
+
+      - name: oracledb_data_file_status
+        rules:
+        - alert: oracledb_data_file_statusCritical
+          expr: oracledb_DATA_FILE_STATUS_value > 0
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_data_file_status is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_data_file_status is critical'
+            message: '{{$labels.instance}}_oracledb_data_file_statusCritical'
+
+      - name: oracledb_fra_usage
+        rules:
+        - alert: oracledb_fra_usageCritical
+          expr: ( oracledb_FRA_USAGE_value >= 90 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_fra_usage is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_fra_usage is critical'
+            message: '{{$labels.instance}}_oracledb_fra_usageCritical'
+        - alert: oracledb_fra_usageWarning
+          expr: ( oracledb_FRA_USAGE_value >= 80 ) AND ( oracledb_FRA_USAGE_value < 90 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_fra_usage is warning. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_fra_usage is warning'
+            message: '{{$labels.instance}}_oracledb_fra_usageWarning'
+
+      - name: oracledb_invalid_objects
+        rules:
+        - alert: oracledb_invalid_objectsCritical
+          expr: oracledb_INVALID_DB_OBJECTS_value > 300
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_invalid_objects is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_invalid_objects is critical'
+            message: '{{$labels.instance}}_oracledb_invalid_objectsCritical'
+
+      - name: oracledb_user_login
+        rules:
+        - alert: oracledb_user_loginCritical
+          expr: oracledb_USER_LOGIN_value >= 2000
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            description: '{{$labels.instance}}: oracledb_user_login_duration is Critical. (current value is: {{ $value }})'
+            summary: '{{$labels.instance}}: oracledb_user_login_duration is Critical'
+            message: '{{ $labels.instance }}: oracledb_user_loginCritical'
+
+      - name: oracledb_rman_backup
+        rules:
+        - alert: oracledb_rman_backupCritical
+          expr: oracledb_RMAN_BACKUP_value > 0
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_rman_backup is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_rman_backup is critical'
+            message: '{{$labels.instance}}_oracledb_rman_backupCritical'
+
+      - name: oracledb_tbs_ifsapp_archive_data
+        rules:
+        - alert: oracledb_tbs_ifsapp_archive_dataCritical
+          expr: ( oracledb_TBS_IFSAPP_ARCHIVE_DATA_value > 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_archive_data is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_ifsapp_archive_data is critical'
+            message: '{{$labels.instance}}_oracledb_tbs_ifsapp_archive_dataCritical'
+        - alert: oracledb_tbs_ifsapp_archive_dataWarning
+          expr: ( oracledb_TBS_IFSAPP_ARCHIVE_DATA_value > 80 ) AND ( oracledb_TBS_IFSAPP_ARCHIVE_DATA_value <= 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_archive_data is warning. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_ifsapp_archive_data is warning'
+            message: '{{$labels.instance}}_oracledb_tbs_ifsapp_archive_dataWarning'
+
+      - name: oracledb_tbs_ifsapp_archive_index
+        rules:
+        - alert: oracledb_tbs_ifsapp_archive_indexCritical
+          expr: ( oracledb_TBS_IFSAPP_ARCHIVE_INDEX_value > 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_archive_index is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_ifsapp_archive_index is critical'
+            message: '{{$labels.instance}}_oracledb_tbs_ifsapp_archive_indexCritical'
+        - alert: oracledb_tbs_ifsapp_archive_indexWarning
+          expr: ( oracledb_TBS_IFSAPP_ARCHIVE_INDEX_value > 80 ) AND ( oracledb_TBS_IFSAPP_ARCHIVE_INDEX_value <= 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_archive_index is warning. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_ifsapp_archive_index is warning'
+            message: '{{$labels.instance}}_oracledb_tbs_ifsapp_archive_indexWarning'
+
+      - name: oracledb_tbs_ifsapp_data
+        rules:
+        - alert: oracledb_tbs_ifsapp_dataCritical
+          expr: ( oracledb_TBS_IFSAPP_DATA_value > 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_data is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_ifsapp_data is critical'
+            message: '{{$labels.instance}}_oracledb_tbs_ifsapp_dataCritical'
+        - alert: oracledb_tbs_ifsapp_dataWarning
+          expr: ( oracledb_TBS_IFSAPP_DATA_value > 80 ) AND ( oracledb_TBS_IFSAPP_DATA_value <= 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_data is warning. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_ifsapp_data is warning'
+            message: '{{$labels.instance}}_oracledb_tbs_ifsapp_dataWarning'
+
+      - name: oracledb_tbs_ifsapp_index
+        rules:
+        - alert: oracledb_tbs_ifsapp_indexCritical
+          expr: ( oracledb_TBS_IFSAPP_INDEX_value > 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_index is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_ifsapp_index is critical'
+            message: '{{$labels.instance}}_oracledb_tbs_ifsapp_indexCritical'
+        - alert: oracledb_tbs_ifsapp_indexWarning
+          expr: ( oracledb_TBS_IFSAPP_INDEX_value > 80 ) AND ( oracledb_TBS_IFSAPP_INDEX_value <= 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_index is warning. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_ifsapp_index is warning'
+            message: '{{$labels.instance}}_oracledb_tbs_ifsapp_indexWarning'
+
+      - name: oracledb_tbs_ifsapp_lob
+        rules:
+        - alert: oracledb_tbs_ifsapp_lobCritical
+          expr: ( oracledb_TBS_IFSAPP_LOB_value > 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_lob is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_ifsapp_lob is critical'
+            message: '{{$labels.instance}}_oracledb_tbs_ifsapp_lobCritical'
+        - alert: oracledb_tbs_ifsapp_lobWarning
+          expr: ( oracledb_TBS_IFSAPP_LOB_value > 80 ) AND ( oracledb_TBS_IFSAPP_LOB_value <= 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_lob is warning. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_ifsapp_lob is warning'
+            message: '{{$labels.instance}}_oracledb_tbs_ifsapp_lobWarning'
+
+      - name: oracledb_tbs_ifsapp_report_data
+        rules:
+        - alert: oracledb_tbs_ifsapp_report_dataCritical
+          expr: ( oracledb_TBS_IFSAPP_REPORT_DATA_value  > 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_report_data is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_ifsapp_report_data is critical'
+            message: '{{$labels.instance}}_oracledb_tbs_ifsapp_report_dataCritical'
+        - alert: oracledb_tbs_ifsapp_report_dataWarning
+          expr: ( oracledb_TBS_IFSAPP_REPORT_DATA_value > 80 ) AND ( oracledb_TBS_IFSAPP_REPORT_DATA_value <= 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_report_data is warning. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_ifsapp_report_data is warning'
+            message: '{{$labels.instance}}_oracledb_tbs_ifsapp_report_dataWarning'
+
+      - name: oracledb_tbs_ifsapp_report_index
+        rules:
+        - alert: oracledb_tbs_ifsapp_report_indexCritical
+          expr: ( oracledb_TBS_IFSAPP_REPORT_INDEX_value > 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_report_index is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_ifsapp_report_index is critical'
+            message: '{{$labels.instance}}_oracledb_tbs_ifsapp_report_indexCritical'
+        - alert: oracledb_tbs_ifsapp_report_indexWarning
+          expr: ( oracledb_TBS_IFSAPP_REPORT_INDEX_value > 80 ) AND ( oracledb_TBS_IFSAPP_REPORT_INDEX_value <= 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_report_index is warning. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_ifsapp_report_index is warning'
+            message: '{{$labels.instance}}_oracledb_tbs_ifsapp_reort_indexWarning'
+
+      - name: oracledb_tbs_sysaux
+        rules:
+        - alert: oracledb_tbs_sysauxCritical
+          expr: ( oracledb_TBS_SYSAUX_value > 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_sysaux is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_sysaux is critical'
+            message: '{{$labels.instance}}_oracledb_tbs_sysauxCritical'
+        - alert: oracledb_tbs_sysauxWarning
+          expr: ( oracledb_TBS_SYSAUX_value > 80 ) AND ( oracledb_TBS_SYSAUX_value <= 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_ifsapp_data is warning. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_sysaux is warning'
+            message: '{{$labels.instance}}_oracledb_tbs_sysauxWarning'
+
+      - name: oracledb_tbs_system
+        rules:
+        - alert: oracledb_tbs_systemCritical
+          expr: ( oracledb_TBS_SYSTEM_value > 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_system is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_system is critical'
+            message: '{{$labels.instance}}_oracledb_tbs_systemCritical'
+        - alert: oracledb_tbs_systemWarning
+          expr: ( oracledb_TBS_SYSTEM_value > 80 ) AND ( oracledb_TBS_SYSTEM_value <= 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_system is warning. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_system is warning'
+            message: '{{$labels.instance}}_oracledb_tbs_systemWarning'
+
+      - name: oracledb_tbs_temp
+        rules:
+        - alert: oracledb_tbs_tempCritical
+          expr: ( oracledb_TBS_TEMP_value > 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_temp is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_temp is critical'
+            message: '{{$labels.instance}}_oracledb_tbs_tempCritical'
+        - alert: oracledb_tbs_tempWarning
+          expr: ( oracledb_TBS_TEMP_value > 80 ) AND ( oracledb_TBS_TEMP_value <= 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_temp is warning. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_temp is warning'
+            message: '{{$labels.instance}}_oracledb_tbs_tempWarning'
+
+      - name: oracledb_tbs_undotbs
+        rules:
+        - alert: oracledb_tbs_undotbsCritical
+          expr: ( oracledb_TBS_UNDOTBS_value > 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_undotbs is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_undotbs is critical'
+            message: '{{$labels.instance}}_oracledb_tbs_undotbsCritical'
+        - alert: oracledb_tbs_undotbsWarning
+          expr: ( oracledb_TBS_UNDOTBS_value > 80 ) AND ( oracledb_TBS_UNDOTBS_value <= 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_undotbs is warning. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_undotbs is warning'
+            message: '{{$labels.instance}}_oracledb_tbs_undotbsWarning'
+
+      - name: oracledb_tbs_users
+        rules:
+        - alert: oracledb_tbs_usersCritical
+          expr: ( oracledb_TBS_USERS_value > 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_users is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_users is critical'
+            message: '{{$labels.instance}}_oracledb_tbs_usersCritical'
+        - alert: oracledb_tbs_usersWarning
+          expr: ( oracledb_TBS_USERS_value > 80 ) AND ( oracledb_TBS_USERS_value <= 85 )
+          for: 10m
+          labels:
+            severity: major
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_tbs_users is warning. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_tbs_users is warning'
+            message: '{{$labels.instance}}_oracledb_tbs_usersWarning'
+
+      - name: oracledb_alert_log
+        rules:
+        - alert: oracledb_alert_logCritical
+          expr:  oracledb_ALERT_LOG_status > 0
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_alert_log is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_alert_log is critical'
+            message: '{{$labels.instance}}_oracledb_alert_logCritical'
+
+      - name:  oracledb_stuck_batch_queue_processes
+        rules:
+        - alert: oracledb_stuck_batch_queue_processesStopped
+          expr: oracledb_stuck_batch_queue_processes != 0
+          labels:
+            severity: warning
+          annotations:
+            description: '{{ $labels.instance }}: oracledb_stuck_batch_queue_processes is stopped. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: oracledb_stuck_batch_queue_processes is stopped'
+            message: '{{$labels.instance}}_oracledb_stuck_batch_queue_processesStopped'
+
+      - name: ifsmonitoring_lock_status
+        rules:
+        - alert: ifsmonitoring_lock_statusCritical
+          expr: ifsmonitoring_lock_status_log > 0
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            description: '{{ $labels.instance }}: ifsmonitoring_lock_status count is critical. (current value is: {{ $value }})'
+            summary: '{{ $labels.instance }}: ifsmonitoring_lock_status count is critical'
+            message: '{{$labels.instance}}_ifsmonitoring_lock_statusCritical'

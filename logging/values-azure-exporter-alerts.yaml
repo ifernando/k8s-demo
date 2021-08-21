@@ -1,0 +1,221 @@
+kube-prometheus-stack:
+  additionalPrometheusRulesMap:
+    # Azure Exporter Metrics
+    azure-exporter:
+      groups:
+      - name: ConversionErrorsTotal
+        rules:
+        - alert: ConversionErrorsTotalCritical
+          expr: conversionerrors_count_average >= 5
+          for: 10m
+          labels:
+            severity: info
+          annotations:
+            description: 'conversionerrors_count_total {{$labels.instance}} is currently critical state for more than 10 minute'
+            summary: 'conversionerrors_count_total {{$labels.instance}} is in critical level. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_ConversionErrorsTotalCritical'
+
+      - name: InputEvents
+        rules:
+        - alert: InputEventsCritical
+          expr: inputevents_count_max != 1
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            description: 'inputevents_count_total{{$labels.instance}} is currently critical state for more than 10 minutes'
+            summary: 'inputevents_count_total {{$labels.instance}} is in critical level. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_InputEventsCritical'
+
+      - name: ErrorsTotal
+        rules:
+        - alert: ErrorsTotalCritical
+          expr: errors_count_average != 1
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            description: 'errors_count_total{{$labels.instance}} is currently critical state for more than 10 minutes'
+            summary: 'errors_count_total {{$labels.instance}} is in critical level. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_ErrorsTotalCritical'
+
+      - name: ResourceUtilization
+        rules:
+        - alert: ResourceUtilizationCritical
+          expr: resourceutilization_percent_average >= 85
+          for: 10m
+          labels:
+            severity: info
+          annotations:
+            description: 'resourceutilization_percent_total {{$labels.instance}} is currently critical state for more than 10 minutes'
+            summary: 'resourceutilization_percent_total {{$labels.instance}} is in critical level. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_ResourceUtilizationCritical'
+
+      - name: NetworkOut
+        rules:
+        - alert: NetworkOutCritical
+          expr: network_out_bytes_average != 1
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            description: 'NetworkOut {{$labels.instance}} is currently in Critical state for more than 10 minutes'
+            summary: 'NetworkOut {{$labels.instance}} has reached Critical. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_NetworkOutCritical'
+
+      - name: PercentageCPU
+        rules:
+        - alert: PercentageCPUCritical
+          expr: percentage_cpu_percent_average >= 85
+          for: 10m
+          labels:
+            severity: info
+          annotations:
+            description: 'PercentageCPU {{$labels.instance}} is currently in critical state for more than 10 minutes'
+            summary: 'PercentageCPU {{$labels.instance}} has reached critical. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_PercentageCPUCritical'
+
+      - name: TriggerSucceededRuns
+        rules:
+        - alert: TriggerSucceededRunsCritical
+          expr: triggersucceededruns_count_total != 1
+          for: 10m
+          labels:
+            severity: info
+          annotations:
+            description: 'TriggerSucceededRuns {{$labels.instance}} is currently in critical state for more than 10 minutes'
+            summary: 'TriggerSucceededRuns {{$labels.instance}} has reached critical. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_TriggerSucceededRunsCritical'
+
+      - name: PipelineSucceededRuns
+        rules:
+        - alert: PipelineSucceededRunsCritical
+          expr: pipelinesucceededruns_count_total != 1
+          for: 10m
+          labels:
+            severity: info
+          annotations:
+            description: 'PipelineSucceededRuns {{$labels.instance}} is currently in critical state for more than 10 minutes'
+            summary: 'PipelineSucceededRuns {{$labels.instance}} has reached critical. (Current value is: {{$value}}'
+            message: '{{$labels.instance}}_PipelineSucceededRunsCritical'
+
+      - name: DiskReadWrite_bytepersec
+        rules:
+        - alert: DiskReadWrite_bytepersecCritical
+          expr: disk_read_bytes_per_sec_bytespersecond_average >= 15000000 and disk_write_bytes_per_sec_bytespersecond_average >= 35000000
+          for: 10m
+          labels:
+            severity: info
+          annotations:
+            description: 'DiskReadWrite_bytepersec {{$labels.instance}} is currently in critical state for more than 10 minutes'
+            summary: 'DiskReadWrite_bytepersec {{$labels.instance}} has reached critical. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_DiskReadWrite_bytepersecCritical'
+
+      groups:
+      - name: ConversionErrorsTotal
+        rules:
+        - alert: ConversionErrorsTotalCritical
+          expr: conversionerrors_count_average >= 5
+          for: 10m
+          labels:
+            severity: info
+          annotations:
+            description: 'conversionerrors_count_total {{$labels.instance}} is currently critical state for more than 10 minute'
+            summary: 'conversionerrors_count_total {{$labels.instance}} is in critical level. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_ConversionErrorsTotalCritical'
+
+      - name: InputEvents
+        rules:
+        - alert: InputEventsCritical
+          expr: inputevents_count_max != 1
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            description: 'inputevents_count_total{{$labels.instance}} is currently critical state for more than 10 minutes'
+            summary: 'inputevents_count_total {{$labels.instance}} is in critical level. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_InputEventsCritical'
+
+      - name: ErrorsTotal
+        rules:
+        - alert: ErrorsTotalCritical
+          expr: errors_count_average != 1
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            description: 'errors_count_total{{$labels.instance}} is currently critical state for more than 10 minutes'
+            summary: 'errors_count_total {{$labels.instance}} is in critical level. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_ErrorsTotalCritical'
+
+      - name: ResourceUtilization
+        rules:
+        - alert: ResourceUtilizationCritical
+          expr: resourceutilization_percent_average >= 85
+          for: 10m
+          labels:
+            severity: info
+          annotations:
+            description: 'resourceutilization_percent_total {{$labels.instance}} is currently critical state for more than 10 minutes'
+            summary: 'resourceutilization_percent_total {{$labels.instance}} is in critical level. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_ResourceUtilizationCritical'
+
+      - name: NetworkOut
+        rules:
+        - alert: NetworkOutCritical
+          expr: network_out_bytes_average != 1
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            description: 'NetworkOut {{$labels.instance}} is currently in Critical state for more than 10 minutes'
+            summary: 'NetworkOut {{$labels.instance}} has reached Critical. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_NetworkOutCritical'
+
+      - name: PercentageCPU
+        rules:
+        - alert: PercentageCPUCritical
+          expr: percentage_cpu_percent_average >= 85
+          for: 10m
+          labels:
+            severity: info
+          annotations:
+            description: 'PercentageCPU {{$labels.instance}} is currently in critical state for more than 10 minutes'
+            summary: 'PercentageCPU {{$labels.instance}} has reached critical. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_PercentageCPUCritical'
+
+      - name: TriggerSucceededRuns
+        rules:
+        - alert: TriggerSucceededRunsCritical
+          expr: triggersucceededruns_count_total != 1
+          for: 10m
+          labels:
+            severity: info
+          annotations:
+            description: 'TriggerSucceededRuns {{$labels.instance}} is currently in critical state for more than 10 minutes'
+            summary: 'TriggerSucceededRuns {{$labels.instance}} has reached critical. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_TriggerSucceededRunsCritical'
+
+      - name: PipelineSucceededRuns
+        rules:
+        - alert: PipelineSucceededRunsCritical
+          expr: pipelinesucceededruns_count_total != 1
+          for: 10m
+          labels:
+            severity: info
+          annotations:
+            description: 'PipelineSucceededRuns {{$labels.instance}} is currently in critical state for more than 10 minutes'
+            summary: 'PipelineSucceededRuns {{$labels.instance}} has reached critical. (Current value is: {{$value}}'
+            message: '{{$labels.instance}}_PipelineSucceededRunsCritical'
+
+      - name: DiskReadWrite_bytepersec
+        rules:
+        - alert: DiskReadWrite_bytepersecCritical
+          expr: disk_read_bytes_per_sec_bytespersecond_average >= 15000000 and disk_write_bytes_per_sec_bytespersecond_average >= 35000000
+          for: 10m
+          labels:
+            severity: info
+          annotations:
+            description: 'DiskReadWrite_bytepersec {{$labels.instance}} is currently in critical state for more than 10 minutes'
+            summary: 'DiskReadWrite_bytepersec {{$labels.instance}} has reached critical. (Current value is: {{$value}})'
+            message: '{{$labels.instance}}_DiskReadWrite_bytepersecCritical'

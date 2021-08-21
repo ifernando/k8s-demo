@@ -1,0 +1,54 @@
+replicaCount: 1
+namespace: ifs-monitoring
+image:
+  repository: iamseth/oracledb_exporter
+  tag: ""
+
+resources:
+  limits:
+    cpu: 400m
+    memory: 256Mi
+  requests:
+    cpu: 200m
+    memory: 128Mi
+
+dataSource: ""
+
+tier: backend
+customerCode: ""
+environmentType: ""
+region: ""
+
+service:
+  type: ClusterIP
+  port: 9161
+
+serviceMonitor:
+  enabled: true
+  interval: "45s"
+  path: "/metrics"
+
+  ## metric relabel configs to apply to samples before ingestion.
+  ##
+  metricRelabelings: []
+  # - action: keep
+  #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
+  #   sourceLabels: [__name__]
+
+  ## relabel configs to apply to samples before ingestion.
+  ##
+  relabelings: []
+  # - sourceLabels: [__meta_kubernetes_pod_node_name]
+  #   separator: ;
+  #   regex: ^(.*)$
+  #   targetLabel: nodename
+  #   replacement: $1
+  #   action: replace
+
+podAnnotations: {}
+  # prometheus.io/scrape: "true"
+  # prometheus.io/port: "9161"
+  # prometheus.io/path: "/metrics"
+
+# nameOverride:
+# fullnameOverride
