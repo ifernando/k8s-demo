@@ -163,10 +163,10 @@
     * Latest helm charts can be gathered from https://github.com/elastic/helm-charts 
 
     ```
-    export HELM_IFS_MONITORING_VER='1.12.0'
-    export RELEASE_NAME="ifs-monitoring"
+    export HELM_IFS_LOGGING_VER='1.12.0'
+    export RELEASE_NAME="ifs-logging"
 
-   helm upgrade --install $RELEASE_NAME logging --version "$HELM_IFS_MONITORING_VER" --set global.fluentd.enabled=true --set global.elasticsearch.enabled=true --set global.kibana.enabled=true --set fluentd.aggregator.extraEnv[0].name=ELASTICSEARCH_HOST,fluentd.aggregator.extraEnv[0].value=elasticsearch-master --set-string fluentd.aggregator.extraEnv[1].name=ELASTICSEARCH_PORT,fluentd.aggregator.extraEnv[1].value=9200 --set fluentd.aggregator.extraEnv[2].name=ELASTICSEARCH_PATH,fluentd.aggregator.extraEnv[2].value=/ --set fluentd.aggregator.extraEnv[3].name=ELASTICSEARCH_SCHEME,fluentd.aggregator.extraEnv[3].value=http --set kibana.elasticsearchHosts=http://elasticsearch-master:9200  --set kibana.ingress.hosts[0]=ucsc-demo.ifs.com  --set elasticsearch.ingress.hosts[0]=ucsc-demo.ifs.com -n default -f ./logging/values.yaml
+   helm upgrade --install $RELEASE_NAME logging --version "$HELM_IFS_LOGGING_VER" --set global.fluentd.enabled=true --set global.elasticsearch.enabled=true --set global.kibana.enabled=true --set fluentd.aggregator.extraEnv[0].name=ELASTICSEARCH_HOST,fluentd.aggregator.extraEnv[0].value=elasticsearch-master --set-string fluentd.aggregator.extraEnv[1].name=ELASTICSEARCH_PORT,fluentd.aggregator.extraEnv[1].value=9200 --set fluentd.aggregator.extraEnv[2].name=ELASTICSEARCH_PATH,fluentd.aggregator.extraEnv[2].value=/ --set fluentd.aggregator.extraEnv[3].name=ELASTICSEARCH_SCHEME,fluentd.aggregator.extraEnv[3].value=http --set kibana.elasticsearchHosts=http://elasticsearch-master:9200  --set kibana.ingress.hosts[0]=ucsc-demo.ifs.com  --set elasticsearch.ingress.hosts[0]=ucsc-demo.ifs.com -n default -f ./logging/values.yaml
     ```
 
     * Go inside elastic-fluentd-kibana folder apply the counter.yaml to generate simple counter logs
