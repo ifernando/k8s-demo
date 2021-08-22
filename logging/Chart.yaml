@@ -1,14 +1,6 @@
 apiVersion: v2
 appVersion: 211.1.1-E.1.0
 dependencies:
-- condition: global.kube-prometheus-stack.enabled
-  name: kube-prometheus-stack
-  repository: https://prometheus-community.github.io/helm-charts
-  version: 16.1.2
-- condition: global.oracle-db-exporter.enabled
-  name: oracle-db-exporter
-  repository: https://ifsclouddev.jfrog.io/artifactory/helm/
-  version: 2.2.0
 - condition: global.fluentd.enabled
   name: fluentd
   repository: https://ifsclouddev.jfrog.io/artifactory/helm/
@@ -21,17 +13,11 @@ dependencies:
   name: kibana
   repository: https://helm.elastic.co
   version: 7.9.2
-- condition: global.elasticsearch-curator.enabled
-  name: elasticsearch-curator
-  repository: https://charts.helm.sh/stable
-  version: 2.2.3
-description: IFS-helm-monitoring-infra-automation
-home: https://www.ifs.com/
+description: k8s Demos
+home: https://github.com/ifernando
 kubeVersion: '>=1.18.0-0'
 maintainers:
-- email: dg1882@ifs.com
-  name: INAT
-- email: miroslav.hadzhiev@codification.io
-  name: Codification
-name: ifs-monitoring
+- email: roshane.ishara@gmail.com
+  name: Mario Ishara Fernando
+name: ifs-logging
 version: 1.12.0
