@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: webapp1
-        image: roshaneishara/k8s-demo:1.0.1
+        image: roshaneishara/k8s-demo:1.0.2
         ports: 
         - containerPort: 8080
      
